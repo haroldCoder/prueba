@@ -8,15 +8,9 @@ users.getUsers = async(req,res)=>{
 } 
 users.createUsers = async(req,res)=>{
 	const {name, last, email, password} = req.body;
-	const userses = {
-			"name": name,
-            "last": last,
-			"email": email,
-			"password": password
-	};
-    conection.query("INSERT INTO users (name, last, email, password) VALUES ?", userses, (err, result)=>{
+    conection.query(`INSERT INTO users (name, last, email, password) VALUES ("${name}", "${last}", "${email}", "${password}")`, (err, result)=>{
         if(err) throw err
-        console("user create")
+        console.log("user create")
         res.json("note create");
     })
 	
@@ -30,7 +24,7 @@ users.updateUsers = async(req,res)=>{
         "email": email,
         "password": password
     };
-    conection.query(`UPDATE users SET name= '${name}', last= '${last}', email= '${email}', password= '${password} WHERE id = ${id}'`)
+    conection.query(`UPDATE users SET name= '${name}', last= '${last}', email= '${email}', password= '${password} WHERE id = ${id}`)
 	res.json({"id": req.params.id});
 };
 users.deleteUsers = async(req,res)=>{

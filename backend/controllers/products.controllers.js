@@ -14,16 +14,16 @@ products.createProducts = async(req,res)=>{
             "price": price,
             "cant": cant
 	};
-    conection.query("INSERT INTO products (name, last, email, password) VALUES ?", products, (err, result)=>{
+    conection.query(`INSERT INTO products (name, price, cant) VALUES ("${name}", ${price}, ${cant})`, (err, result)=>{
         if(err) throw err
-        console("product create")
+        console.log("product create")
     })
 	
 }
 products.updateProducts = async(req,res)=>{
     const {id} = req.params;
 	const {name, price, cant} = req.body;
-    conection.query(`UPDATE products SET name= '${name}', price = ${price}, cant = ${cant} WHERE id = ${id}'`, (err, res)=>{
+    conection.query(`UPDATE products SET name= '${name}', price = ${price}, cant = ${cant} WHERE id = ${id}`, (err, res)=>{
         if(err) throw err;
         console.log("product update");
     })
