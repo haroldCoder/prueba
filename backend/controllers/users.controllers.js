@@ -1,5 +1,6 @@
 const users = {};
 const {conection} = require("../db/conection");
+const jwt = require("jsonwebtoken");
 
 users.getUsers = async(req,res)=>{
 	await conection.query("SELECT * FROM users", (err, result)=>{
@@ -8,31 +9,14 @@ users.getUsers = async(req,res)=>{
 } 
 users.createUsers = async(req,res)=>{
 	const {name, last, email, password} = req.body;
-    conection.query(`INSERT INTO users (name, last, email, password) VALUES ("${name}", "${last}", "${email}", "${password}")`, (err, result)=>{
+    
+    const token = jwt.sign(name, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c")
+    conection.query(`INSERT INTO users (name, last, email, password, token) VALUES ("${name}", "${last}", "${email}", "${password}", "${token}")`, (err, result)=>{
         if(err) throw err
         console.log("user create")
-        res.json("note create");
+        res.json({data: {"nombre": name, apellido: last, correo: email, }, token: {"access_token": token}});
     })
 	
 }
-users.updateUsers = async(req,res)=>{
-    const {id} = req.params;
-	const {name, last, email, password} = req.body;
-	const userses = {
-        "name": name,
-        "last": last,
-        "email": email,
-        "password": password
-    };
-    conection.query(`UPDATE users SET name= '${name}', last= '${last}', email= '${email}', password= '${password} WHERE id = ${id}`)
-	res.json({"id": req.params.id});
-};
-users.deleteUsers = async(req,res)=>{
-	const {id} = req.params;
-	conection.query(`DELETE FROM users WHERE id = ${id}`, (err, result)=>{
-        console.log("user delete");
-    });
-	res.json("note remove");
-};
 
 module.exports = users;

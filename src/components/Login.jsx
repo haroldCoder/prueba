@@ -28,15 +28,21 @@ export default function Login() {
                     email: email,
                     password: password
                 })
+                location.href = "/home"
             }
         }
         else{
+            let v = false;
             const res = data.filter((e)=>{
                 if (e.email == email && e.password == password){
+                    v = true
                     return e
                 }
             })
-            if(res){
+            if(v){
+                axios.post("http://localhost:8000/users/login",{
+                    token: res[0].token
+                })
                 location.href = "/home";
             }
         }  
